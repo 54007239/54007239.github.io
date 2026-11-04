@@ -1,10 +1,53 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的网站</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>问道长生 · 修仙文字游戏</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <div class="ink-bg"></div>
+  <div class="layout">
+
+    <!-- 主区域 -->
+    <main class="stage">
+      <header class="topbar">
+        <div class="game-title">问道长生</div>
+        <div class="chapter" id="chapter-label"></div>
+        <button class="mini-btn" id="btn-sound" title="音效开关">♪ 音效</button>
+        <button class="mini-btn" id="btn-restart" title="重新开始">↺ 重入轮回</button>
+      </header>
+
+      <!-- 场景视觉 -->
+      <div class="scene-visual">
+        <img class="scene-art" id="scene-art" src="assets/art/village.jpg" alt="场景">
+        <div class="scene-name" id="scene"></div>
+      </div>
+
+      <!-- 叙事文本 -->
+      <section class="narrative">
+        <h2 class="event-title" id="event-title"></h2>
+        <p class="event-text" id="event-text"></p>
+      </section>
+
+      <!-- 选项 -->
+      <section class="options" id="options"></section>
+      <div class="toast-area" id="toast-area"></div>
+    </main>
+
+    <!-- 属性面板 -->
+    <aside class="sidebar">
+      <div class="panel-title">修为境界</div>
+      <div class="realm-badge" id="realm">炼气期</div>
+      <div class="panel-title">六维属性</div>
+      <div class="attr-list" id="attr-list"></div>
+      <div class="panel-tip">每一项选择都会改变属性，属性决定你能解锁的事件与最终结局。</div>
+    </aside>
+  </div>
+
+  <script src="js/story.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/game.js"></script>
 </body>
 </html>

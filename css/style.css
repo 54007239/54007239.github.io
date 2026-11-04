@@ -1,0 +1,248 @@
+/* 《问道长生》水墨国风样式 */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", "楷体", serif;
+  background: #efe9da;
+  color: #2c2a26;
+  min-height: 100vh;
+}
+
+/* 宣纸纹理背景 */
+.ink-bg {
+  position: fixed; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(120,110,90,0.08), transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(120,110,90,0.1), transparent 50%),
+    #efe9da;
+}
+
+.layout {
+  position: relative;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 24px 20px;
+  display: flex;
+  gap: 20px;
+  min-height: 100vh;
+}
+
+/* ===== 主舞台 ===== */
+.stage {
+  flex: 1;
+  background: #faf6ec;
+  border: 1px solid #d8d0bb;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(90, 80, 60, 0.12);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 22px;
+  border-bottom: 1px solid #e2dac6;
+  background: #f4efe1;
+}
+.game-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: #8c2f2f;
+}
+.chapter {
+  font-size: 13px;
+  color: #7a7261;
+  letter-spacing: 2px;
+  flex: 1;
+}
+.mini-btn {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 5px 12px;
+  border: 1px solid #c9bfa4;
+  background: transparent;
+  color: #7a7261;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.mini-btn:hover { background: #ece5d2; color: #2c2a26; }
+
+/* 场景图 */
+.scene-visual {
+  position: relative;
+  height: 260px;
+  border-bottom: 1px solid #e2dac6;
+  overflow: hidden;
+  background: #e8e1cf;
+}
+.scene-art {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center 55%;
+  transition: opacity 0.5s ease;
+}
+.scene-name {
+  position: absolute;
+  left: 22px; bottom: 14px;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #f5f1e6;
+  background: rgba(60, 54, 44, 0.65);
+  padding: 4px 14px;
+  border-radius: 4px;
+  backdrop-filter: blur(2px);
+}
+
+/* 叙事区 */
+.narrative { padding: 26px 30px 10px; }
+.event-title {
+  font-size: 20px;
+  color: #8c2f2f;
+  letter-spacing: 3px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #d8d0bb;
+}
+.event-text {
+  font-size: 16px;
+  line-height: 2;
+  white-space: pre-line;
+  color: #3a362e;
+}
+
+/* 选项区 */
+.options {
+  padding: 18px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.opt-btn {
+  font-family: inherit;
+  text-align: left;
+  font-size: 15px;
+  padding: 13px 18px;
+  background: #f4efe1;
+  border: 1px solid #d8d0bb;
+  border-left: 4px solid #8c2f2f;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #2c2a26;
+}
+.opt-btn:hover {
+  background: #ede4cd;
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(90, 80, 60, 0.15);
+}
+.opt-btn.locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-left-color: #b0a88e;
+}
+.opt-btn.locked:hover { transform: none; box-shadow: none; background: #f4efe1; }
+.opt-btn.restart { border-left-color: #2e5e4e; }
+.opt-lock { display: block; font-size: 12px; color: #9a2f2f; margin-top: 4px; }
+
+/* 属性浮动提示 */
+.toast-area {
+  position: fixed;
+  right: 320px; top: 40%;
+  pointer-events: none;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.toast {
+  font-size: 15px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: rgba(250, 246, 236, 0.95);
+  border: 1px solid #d8d0bb;
+  animation: floatUp 2.2s ease-out forwards;
+}
+.toast.up { color: #2e5e4e; }
+.toast.down { color: #9a2f2f; }
+@keyframes floatUp {
+  0% { opacity: 0; transform: translateY(10px); }
+  15% { opacity: 1; transform: translateY(0); }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-18px); }
+}
+
+/* ===== 侧栏 ===== */
+.sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  background: #faf6ec;
+  border: 1px solid #d8d0bb;
+  border-radius: 14px;
+  padding: 20px;
+  height: fit-content;
+  box-shadow: 0 4px 24px rgba(90, 80, 60, 0.12);
+}
+.panel-title {
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #7a7261;
+  margin: 14px 0 10px;
+  padding-left: 8px;
+  border-left: 3px solid #8c2f2f;
+}
+.panel-title:first-child { margin-top: 0; }
+.realm-badge {
+  text-align: center;
+  font-size: 17px;
+  letter-spacing: 6px;
+  padding: 10px;
+  background: #f4efe1;
+  border: 1px solid #d8d0bb;
+  border-radius: 8px;
+  color: #8c2f2f;
+  margin-bottom: 8px;
+}
+.attr-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.attr-name { width: 34px; font-size: 14px; }
+.attr-bar {
+  flex: 1; height: 8px;
+  background: #e8e1cf;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.attr-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+.attr-修为 { background: #b03a3a; }
+.attr-心性 { background: #2e5e4e; }
+.attr-声望 { background: #b8860b; }
+.attr-机缘 { background: #6a5fa0; }
+.attr-杀戮 { background: #444; }
+.attr-情缘 { background: #c0608a; }
+.attr-val { width: 26px; text-align: right; font-size: 13px; color: #7a7261; }
+.panel-tip {
+  margin-top: 16px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #9a917c;
+  border-top: 1px dashed #d8d0bb;
+  padding-top: 12px;
+}
+
+/* 响应式 */
+@media (max-width: 860px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; }
+  .toast-area { right: 20px; }
+}
