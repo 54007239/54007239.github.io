@@ -246,3 +246,148 @@ body {
   .sidebar { width: 100%; }
   .toast-area { right: 20px; }
 }
+
+/* ===== 故事线树状图 ===== */
+.tree-overlay {
+  position: fixed; inset: 0;
+  background: rgba(30, 27, 22, 0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.tree-panel {
+  background: #f7f2e7;
+  border: 1px solid #d8d0bb;
+  border-radius: 12px;
+  width: 92%;
+  max-width: 1000px;
+  height: 86%;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+.tree-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2dac6;
+  background: #f2ecdd;
+}
+.tree-title { font-size: 18px; letter-spacing: 2px; color: #4a4438; font-weight: bold; }
+.tree-close {
+  border: none; background: none; font-size: 26px; cursor: pointer;
+  color: #8a8272; line-height: 1;
+}
+.tree-close:hover { color: #4a4438; }
+.tree-body { flex: 1; overflow: auto; padding: 16px; }
+.tree-scroll { min-width: 100%; }
+.tree-svg { width: 100%; height: auto; display: block; }
+.tree-footer {
+  padding: 12px 20px; font-size: 12px; color: #9a917c;
+  border-top: 1px solid #e2dac6; background: #f2ecdd;
+}
+.tree-chapter-title { font-size: 15px; font-weight: bold; fill: #7a5c3a; letter-spacing: 1px; }
+.tree-node {
+  stroke: #b0a88e; stroke-width: 1.5;
+}
+.tree-node.unlocked { fill: #fffdf6; stroke: #7a9c8a; stroke-width: 1.5; }
+.tree-node.locked { fill: #e6e0d2; stroke: #cfc8b6; stroke-width: 1; }
+.tree-node.current { fill: #d8e6dd; stroke: #2e5e4e; stroke-width: 2.5; }
+.tree-node.hover { fill: #e8f0eb; stroke: #2e5e4e; stroke-width: 2.5; }
+.tree-node-text { font-size: 11px; fill: #3a352c; pointer-events: none; }
+.tree-node.locked .tree-node-text { fill: #a39a86; }
+.tree-lock { font-size: 10px; pointer-events: none; }
+.tree-edge { stroke: #c9c1ae; stroke-width: 1.5; }
+.tree-edge.unlocked { stroke: #7a9c8a; stroke-width: 2; }
+.tree-edge.cross { stroke: #b8a98a; stroke-width: 1.2; }
+
+/* ===== 结局成就卡片 ===== */
+.ending-overlay {
+  position: fixed; inset: 0;
+  background: rgba(30, 27, 22, 0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1100;
+}
+.ending-card {
+  background: #f7f2e7;
+  border-radius: 16px;
+  padding: 36px 40px;
+  max-width: 460px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.5);
+  border: 2px solid #d8d0bb;
+  animation: ending-in 0.4s ease;
+}
+@keyframes ending-in {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.ending-card.success { border-color: #c9a86a; }
+.ending-card.fail { border-color: #8a7a6a; }
+.ending-card-tag {
+  display: inline-block; font-size: 12px; letter-spacing: 3px;
+  color: #a98b4f; border: 1px solid #d8c69a; border-radius: 20px;
+  padding: 4px 16px; margin-bottom: 16px;
+}
+.ending-card.fail .ending-card-tag { color: #8a7a6a; border-color: #c9b8a8; }
+.ending-card-name {
+  font-size: 34px; font-weight: bold; letter-spacing: 4px;
+  color: #4a3a22; margin-bottom: 12px;
+}
+.ending-card-desc { font-size: 14px; line-height: 1.8; color: #6a6252; margin-bottom: 20px; }
+.ending-card-ach {
+  font-size: 15px; color: #8a6d2f; margin-bottom: 12px; font-weight: bold;
+}
+.ending-card-ach.muted { color: #a39a86; font-weight: normal; }
+.ending-card-progress { font-size: 12px; color: #9a917c; margin-bottom: 20px; }
+.ending-card-btn {
+  display: inline-block; padding: 10px 36px;
+  background: #2e5e4e; color: #fff; border: none; border-radius: 8px;
+  font-size: 15px; cursor: pointer; letter-spacing: 2px;
+  font-family: inherit;
+}
+.ending-card-btn:hover { background: #264c40; }
+
+/* ===== 成就面板 ===== */
+.ach-overlay {
+  position: fixed; inset: 0;
+  background: rgba(30, 27, 22, 0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.ach-panel {
+  background: #f7f2e7;
+  border: 1px solid #d8d0bb;
+  border-radius: 12px;
+  width: 92%; max-width: 640px; height: 86%;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+.ach-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid #e2dac6; background: #f2ecdd;
+}
+.ach-title { font-size: 18px; letter-spacing: 2px; color: #4a4438; font-weight: bold; }
+.ach-close { border: none; background: none; font-size: 26px; cursor: pointer; color: #8a8272; line-height: 1; }
+.ach-close:hover { color: #4a4438; }
+.ach-body { flex: 1; overflow: auto; padding: 16px 20px; }
+.ach-progress {
+  text-align: center; font-size: 13px; color: #8a6d2f;
+  padding: 10px; margin-bottom: 12px; border-bottom: 1px dashed #d8d0bb;
+}
+.ach-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px; margin-bottom: 8px;
+  border-radius: 8px; border: 1px solid #e2dac6; background: #fffdf6;
+}
+.ach-item.unlocked { border-color: #c9a86a; background: #fbf6ea; }
+.ach-item.locked { opacity: 0.55; background: #f0ebdd; }
+.ach-icon { font-size: 26px; flex-shrink: 0; }
+.ach-info { display: flex; flex-direction: column; gap: 3px; }
+.ach-name { font-size: 15px; font-weight: bold; color: #4a4438; }
+.ach-item.unlocked .ach-name { color: #7a5c3a; }
+.ach-desc { font-size: 12px; color: #8a8272; line-height: 1.6; }
+.ach-footer {
+  padding: 12px 20px; font-size: 12px; color: #9a917c;
+  border-top: 1px solid #e2dac6; background: #f2ecdd;
+}

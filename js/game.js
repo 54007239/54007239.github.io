@@ -5,12 +5,30 @@
   let state = null;
 
   function newState() {
-    return {
+    const s = {
       attrs: { ...GAME_DATA.initialAttrs },
       flags: [],
       current: GAME_DATA.startEvent,
-      history: []
+      history: [],
+      unlocked: {}
     };
+    // 记录起始节点的快照
+    s.unlocked[GAME_DATA.startEvent] = snapshot(s);
+    return s;
+  }
+
+  // 生成某个状态点的快照（用于树状图跳转恢复）
+  function snapshot(s) {
+    return { attrs: { ...s.attrs }, flags: [...s.flags] };
+  }
+
+  // 记录当前事件的解锁快照（保留第一次到达的状态）
+  function markUnlocked(eventId) {
+    if (!state || !eventId) return;
+    if (!state.unlocked) state.unlocked = {};
+    if (!state.unlocked[eventId]) {
+      state.unlocked[eventId] = snapshot(state);
+    }
   }
 
   /* ---------- 条件判定 ---------- */
@@ -89,6 +107,7 @@
       renderSettle(nextId);
     } else {
       state.current = nextId;
+      markUnlocked(nextId);
       save();
       render();
       showEffects(changes);
@@ -336,6 +355,11 @@
     }
     $("event-text").textContent = text;
 
+    // 章节结算时静默解锁对应结局成就（不弹卡片，只在飞升/失败时弹）
+    if (window.ACHIEVEMENTS) {
+      window.ACHIEVEMENTS.unlockByEnding(ending.name);
+    }
+
     const box = $("options");
     box.innerHTML = "";
     const next = document.createElement("button");
@@ -348,7 +372,7 @@
           state.attrs[k] = (state.attrs[k] || 0) + cfg.breakthrough[k];
         }
       }
-      state.current = cfg.nextEvent; save(); render();
+      state.current = cfg.nextEvent; save(); markUnlocked(cfg.nextEvent); render();
     };
     box.appendChild(next);
 
@@ -372,6 +396,12 @@
       if (GAME_DATA.flagEpiloguesEnding[f]) text += "\n\n" + GAME_DATA.flagEpiloguesEnding[f];
     }
     $("event-text").textContent = text;
+
+    // 成就：解锁条件成就 + 弹出结局卡片
+    if (window.ACHIEVEMENTS) {
+      window.ACHIEVEMENTS.unlockByCondition(state);
+      window.ACHIEVEMENTS.showEndingCard(ending.name, ending.desc, false);
+    }
 
     const box = $("options");
     box.innerHTML = "";
@@ -399,6 +429,12 @@
     let text = ending.desc;
     $("event-text").textContent = text;
 
+    // 成就：解锁条件成就 + 弹出失败结局卡片
+    if (window.ACHIEVEMENTS) {
+      window.ACHIEVEMENTS.unlockByCondition(state);
+      window.ACHIEVEMENTS.showEndingCard(ending.name, ending.desc, true);
+    }
+
     const box = $("options");
     box.innerHTML = "";
     const again = document.createElement("button");
@@ -424,6 +460,20 @@
       .join("\n");
   }
 
+  /* ---------- 树状图跳转：从已解锁节点重开 ---------- */
+  function jumpTo(eventId) {
+    const snap = state.unlocked && state.unlocked[eventId];
+    if (!snap || !GAME_DATA.events[eventId]) return false;
+    // 恢复该节点的属性/flag 快照
+    state.attrs = { ...snap.attrs };
+    state.flags = [...snap.flags];
+    state.current = eventId;
+    // 保留原有 history（不清空，保证刷新后仍能恢复进度）
+    save();
+    render();
+    return true;
+  }
+
   /* ---------- 存档 ---------- */
   function save() {
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (e) {}
@@ -433,7 +483,12 @@
       const raw = localStorage.getItem(SAVE_KEY);
       if (!raw) return null;
       const s = JSON.parse(raw);
-      if (s && GAME_DATA.events[s.current]) return s;
+      if (s && GAME_DATA.events[s.current]) {
+        // 兼容旧存档：补上 unlocked 字段
+        if (!s.unlocked) s.unlocked = {};
+        if (!s.unlocked[s.current]) s.unlocked[s.current] = snapshot(s);
+        return s;
+      }
     } catch (e) {}
     return null;
   }
@@ -451,7 +506,8 @@
 
   window.addEventListener("DOMContentLoaded", () => {
     const s = load();
-    if (s && s.history.length > 0) {
+    // 只要存档有效且当前事件存在就恢复（不依赖 history 长度，支持树状图跳转后的状态）
+    if (s && s.current && GAME_DATA.events[s.current]) {
       state = s;
       render();
     } else {
@@ -460,6 +516,22 @@
     $("btn-restart").onclick = () => {
       if (confirm("确定要重新入轮回吗？本世进度将清空。")) { clearSave(); start(); }
     };
+
+    // 故事线树状图按钮
+    const treeBtn = $("btn-tree");
+    if (treeBtn) {
+      treeBtn.onclick = () => {
+        if (window.TREE) window.TREE.open(state);
+      };
+    }
+
+    // 成就面板按钮
+    const achBtn = $("btn-achievement");
+    if (achBtn) {
+      achBtn.onclick = () => {
+        if (window.ACHIEVEMENTS) window.ACHIEVEMENTS.open();
+      };
+    }
 
     // 音效开关
     const soundBtn = $("btn-sound");
@@ -475,4 +547,7 @@
       updateSound();
     }
   });
+
+  // 暴露给外部模块（树状图跳转）
+  window.GAME = { jumpTo: jumpTo };
 })();
