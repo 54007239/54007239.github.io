@@ -130,13 +130,23 @@
     const img = $("scene-art");
     if (!img) return;
     const src = "assets/art/" + art + ".jpg";
-    if (img.dataset.art === art) return;
+    if (img.dataset.art === art && img.src.indexOf(src) !== -1) return;
+
+    const show = () => { img.style.opacity = "1"; };
+
     img.style.opacity = "0";
-    setTimeout(() => {
-      img.dataset.art = art;
-      img.src = src;
-      img.onload = () => { img.style.opacity = "1"; };
-    }, 200);
+    img.dataset.art = art;
+
+    // 先绑定 onload（并处理已缓存图片的 complete 情况），再设置 src，避免竞态
+    img.onload = show;
+    img.onerror = () => {
+      // 图片加载失败时也恢复透明度，避免整块空白
+      img.style.opacity = "1";
+    };
+    img.src = src;
+
+    // 若图片已从缓存加载完成（complete），直接显示，避免 load 事件丢失
+    if (img.complete) show();
   }
 
   function render() {
